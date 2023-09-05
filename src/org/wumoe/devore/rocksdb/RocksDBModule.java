@@ -19,7 +19,7 @@ public class RocksDBModule extends Module {
 
     @Override
     public void init(Env dEnv) {
-        dEnv.addTokenFunction("rocksdb-open", (args, env) -> {
+        dEnv.addTokenFunction("rocksdb-open", ((args, env) -> {
             Path path = Paths.get(args.get(0).toString());
             try {
                 if (!Files.isSymbolicLink(path))
@@ -28,23 +28,23 @@ public class RocksDBModule extends Module {
             } catch (RocksDBException | IOException e) {
                 throw new DevoreRuntimeException(e.getMessage());
             }
-        }, 1, false);
-        dEnv.addTokenFunction("rocksdb-put", (args, env) -> {
+        }), 1, false);
+        dEnv.addTokenFunction("rocksdb-put", ((args, env) -> {
             if (!(args.get(0) instanceof DRocksDB db))
                 throw new DevoreCastException(args.get(0).type(), "rocksdb");
             db.put(args.get(1), args.get(2));
             return DWord.WORD_NIL;
-        }, 3, false);
-        dEnv.addTokenFunction("rocksdb-get", (args, env) -> {
+        }), 3, false);
+        dEnv.addTokenFunction("rocksdb-get", ((args, env) -> {
             if (!(args.get(0) instanceof DRocksDB db))
                 throw new DevoreCastException(args.get(0).type(), "rocksdb");
             return db.get(args.get(1));
-        }, 2, false);
-        dEnv.addTokenFunction("rocksdb-delete", (args, env) -> {
+        }), 2, false);
+        dEnv.addTokenFunction("rocksdb-delete", ((args, env) -> {
             if (!(args.get(0) instanceof DRocksDB db))
                 throw new DevoreCastException(args.get(0).type(), "rocksdb");
             db.delete(args.get(1));
             return DWord.WORD_NIL;
-        }, 2, false);
+        }), 2, false);
     }
 }
