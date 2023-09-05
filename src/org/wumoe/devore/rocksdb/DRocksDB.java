@@ -3,7 +3,6 @@ package org.wumoe.devore.rocksdb;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
 import org.wumoe.devore.exception.DevoreRuntimeException;
-import org.wumoe.devore.lang.token.DBool;
 import org.wumoe.devore.lang.token.DString;
 import org.wumoe.devore.lang.token.DWord;
 import org.wumoe.devore.lang.token.Token;
@@ -61,6 +60,6 @@ public class DRocksDB extends Token {
 
     @Override
     public int compareTo(Token token) {
-        return -1;
+        return token instanceof DRocksDB d && d.db.equals(this.db) ? 0 : -1;
     }
 }
