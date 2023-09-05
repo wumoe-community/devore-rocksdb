@@ -6,6 +6,7 @@ import org.rocksdb.RocksDBException;
 import org.wumoe.devore.exception.DevoreCastException;
 import org.wumoe.devore.exception.DevoreRuntimeException;
 import org.wumoe.devore.lang.Env;
+import org.wumoe.devore.lang.token.DString;
 import org.wumoe.devore.lang.token.DWord;
 import org.wumoe.devore.module.Module;
 
@@ -20,6 +21,8 @@ public class RocksDBModule extends Module {
     @Override
     public void init(Env dEnv) {
         dEnv.addTokenFunction("rocksdb-open", ((args, env) -> {
+            if (!(args.get(0) instanceof DString))
+                throw new DevoreCastException(args.get(0).type(), "string");
             Path path = Paths.get(args.get(0).toString());
             try {
                 if (!Files.isSymbolicLink(path))
@@ -32,17 +35,25 @@ public class RocksDBModule extends Module {
         dEnv.addTokenFunction("rocksdb-put", ((args, env) -> {
             if (!(args.get(0) instanceof DRocksDB db))
                 throw new DevoreCastException(args.get(0).type(), "rocksdb");
+            if (!(args.get(1) instanceof DString))
+                throw new DevoreCastException(args.get(1).type(), "string");
+            if (!(args.get(2) instanceof DString))
+                throw new DevoreCastException(args.get(2).type(), "string");
             db.put(args.get(1), args.get(2));
             return DWord.WORD_NIL;
         }), 3, false);
         dEnv.addTokenFunction("rocksdb-get", ((args, env) -> {
             if (!(args.get(0) instanceof DRocksDB db))
                 throw new DevoreCastException(args.get(0).type(), "rocksdb");
+            if (!(args.get(1) instanceof DString))
+                throw new DevoreCastException(args.get(1).type(), "string");
             return db.get(args.get(1));
         }), 2, false);
         dEnv.addTokenFunction("rocksdb-delete", ((args, env) -> {
             if (!(args.get(0) instanceof DRocksDB db))
                 throw new DevoreCastException(args.get(0).type(), "rocksdb");
+            if (!(args.get(1) instanceof DString))
+                throw new DevoreCastException(args.get(1).type(), "string");
             db.delete(args.get(1));
             return DWord.WORD_NIL;
         }), 2, false);
